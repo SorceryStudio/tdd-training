@@ -1,0 +1,21 @@
+version: "3.8"
+services:
+
+  database:
+    image: "mongo:latest"
+
+  broker:
+    image: "rabbitmq:latest"
+
+  api:
+    image: "tdd-training:latest"
+    build: "./"
+    entrypoint: ["node", "dist/app/api/"]
+    depends_on:
+      - "database"
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost/health"]
+      interval: 10s
+      timeout: 1s
+      retries: 3
+      start_period: 10s
